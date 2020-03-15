@@ -1,4 +1,4 @@
-# RSACipher-stega
+# RSA VIDEO STEGANOGRAPHY 
 A software written in Java to implement VIDEO STEGANOGRAPHY with RSA that generate RSA Private Cipher Key pair to Encrypt a video (message) with a private key, hide the encryppted video inside a stega image ( cover image )  , extract the hidden video from the stega image, decrypt the extracted video and write to a file for a receiver to have access. The sender will have access to both public and private key generated and then the sender have to make available the private key for the receiver to be able to decrypt the video.
 
 # Video Files
