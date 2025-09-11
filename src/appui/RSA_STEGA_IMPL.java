@@ -393,6 +393,7 @@ public class RSA_STEGA_IMPL {
             arrayList.add(b);
         }
 
+        bufferedInputStream = null; //free the memory
         System.out.println("Video bytes read successfully");
         return arrayList;
     }

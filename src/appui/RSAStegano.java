@@ -22,13 +22,12 @@ public class RSAStegano {
     private static File imageFile;
     private BufferedImage originalBufferedImage;
     private static WritableRaster stegaWriteableRaster;
-    private BufferedImage stegaImage;
     private static final int PIXEL_SIZE = 1; // the size of each pixel
     private static int originalImageHeight = 0;
     private static int getOriginalImageWidth = 0;
 
     public RSAStegano(File imageFileName) {
-        this.imageFile = imageFileName;
+        imageFile = imageFileName;
     }
     private static final ExecutorService executorService = createThreadPoolsForVideoEmbedding(10);
     HashMap<Integer, ArrayList<StringBuffer[]>> imagePixelResult = new HashMap<>(); //the result of the pixels extracted
@@ -39,7 +38,6 @@ public class RSAStegano {
 
     private void processBufferedImage() throws IOException {
         this.originalBufferedImage = createBufferedImage();
-//        this.originalBufferedImage.
     }
 
     private byte[] getARGB() {
@@ -69,16 +67,14 @@ public class RSAStegano {
 
     private void getAllPixelsFromOriginalImage() throws Exception {
         processBufferedImage();
-        int count = 0;
-        double[][] pixels = new double[getImageWidth()][3];
         int[] pixel = new int[4];
         stegaWriteableRaster = createStegaImage();
         Raster originalImageRaster = getImageRaster();
         ArrayList<StringBuffer[]> pixelArrayStringBuffer = new ArrayList<>();
 
         StringBuffer[] tempArS = new StringBuffer[4];
-        this.originalImageHeight = getImageHeight();
-        this.getOriginalImageWidth = getImageWidth();
+        originalImageHeight = getImageHeight();
+        getOriginalImageWidth = getImageWidth();
 
         System.out.println("Video height ::: " + imagePixelResult.size());
 
@@ -130,24 +126,6 @@ public class RSAStegano {
         }
         return stringBuffer;
     }
-//
-//    public static void main(String[] args) {
-//
-//        try {
-//            RSAStegano imageProcessor = new RSAStegano(new File(getImageFile()));
-////
-//////        arrayList.forEach(System.out::println);
-////        System.out.println("Starting to perform LSB manipulation");
-//        imageProcessor.getAllPixelsFromOriginalImage();
-////            System.out.println("Running");
-////            exstractVideos(null);
-////        getVideoBinaryArray(null);
-////            copySomeBytes(null);
-//        }catch (Exception e) {
-//            e.printStackTrace();
-//        }
-////
-//    }
 
     private static ArrayList<Integer[]> getpixelIntergerArr(ArrayList<StringBuffer[]> stringbuffferArray) {
         ArrayList<Integer[]> result = new ArrayList<Integer[]>();
@@ -209,9 +187,8 @@ public class RSAStegano {
             System.out.println("HEIGHT SIZE :::: " + linked.size());
             System.out.println("WIDTH SIZE :::: " + linked.get(0).size());
 
-
             createStanoImage(linked);
-//            stopAllThreadExecutorservices(executorService);
+
             System.out.println(buf.size() + "-------------->>>>>>>   " + linked.size());
 
         }catch (Exception e ){
@@ -231,20 +208,6 @@ public class RSAStegano {
 
 
         LinkedHashMap<Integer, ArrayList<StringBuffer[]>> stegaImageBufferStringArray = new LinkedHashMap<>();
-//        System.out.println("IMAGE BINARIES BEFORE START");
-//            int height = originalImageHeight;
-//            int width = getOriginalImageWidth;
-//            int[] test = new int[4];
-//            for (int k = 0; k < binaryStringBuffer.size(); k++) { // ArrayList<ArrayList<StringBuffer[]>>
-//                for (int j = 0; j < binaryStringBuffer.get(k).size(); j++) { // ArrayBuffer<StringBuffer[]>
-//                    StringBuffer[] sb = binaryStringBuffer.get(k).get(j);
-//                    System.out.println(Arrays.toString(sb));
-//                    if (k == 2) {
-//                        System.out.println("IMAGE BINARIES BEFORE END");
-////                        System.exit(0);
-//                    }
-//                }
-//            }
 
         /**
          * This method will hide all the video bytes which has been converted to
@@ -253,38 +216,21 @@ public class RSAStegano {
          * binaries will be removed and the the bit in the video binaries will
          * be replaced with the bit removed from the image binary.
          */
-        ArrayList<String[]> result = new ArrayList<>();
-
-        ArrayList<String> videoArrayBitStrings = new ArrayList<>();
-
-        String temp = "";
-
-        int nextPos = 0;
 
         int n = 0;
-
-        int nextP = 0;
 
         StringBuffer[] strBuf = new StringBuffer[4];
 
         ArrayList<StringBuffer[]> sba = new ArrayList<>();
 
-        StringBuffer[] sBuf = null;
-
-        ArrayList<StringBuffer[]> imageStringBuffer = getNextImageStringBufferArray(++n, binaryStringBuffer);
-
-        int ORIGINAL_IMAGE_PIXEL_LENGTH = binaryStringBuffer.size();
-
-        ArrayList<StringBuffer[]> temBuffer = new ArrayList<>(); // store temporary string buffer
+        // store temporary string buffer
         System.out.println(binaryStringBuffer.size());
         System.out.println(binaryStringBuffer.get(0).size());
 
         System.out.println(binaryStringBuffer.size() * (binaryStringBuffer.get(0).size() * 4));
         System.out.println(2 * videoIntegers.size());
 
-
-
-        ArrayList<ArrayList<StringBuffer[]>> steganoSringBufbinaryArray = new ArrayList<>(); // the stegano bufferedm string
+        // the stegano bufferedm string
 
         if (((binaryStringBuffer.size() * (binaryStringBuffer.get(0).size() * 4 ) )) < (2 * videoIntegers.size())) {
             System.out.println("VIDEO SIZE ::: " + videoIntegers.size() + "IMAGE PIXELS :::: " + (binaryStringBuffer.size() * binaryStringBuffer.get(0).size() * 4));
@@ -292,71 +238,59 @@ public class RSAStegano {
             System.exit(0);
         }
 
-        int vidPos = 0;
         ArrayList<String> vbs = new ArrayList<>();
         // ArrayList <ArrayList<StringBuffer[]>>
         //creating the thread pool for video embedding
-//        while (!videoIntegers.isEmpty()) {
-            System.out.println(videoIntegers.size() + ":::" + videoIntegers.size()*2);
-            try {
-                int nextVidInt = videoIntegers.remove(0);
-//                int normalSize = videoIntegers.size();
-                System.out.println("NEXT []----------> " + getBinaryString(nextVidInt));
-                vbs.addAll(Arrays.asList(getBinaryString(nextVidInt).toString().split("")));
+        System.out.println(videoIntegers.size() + ":::" + videoIntegers.size()*2);
+        try {
+            int nextVidInt = videoIntegers.remove(0);
 
-                for (int i = 0; i < originalImageHeight; i++) { // ArrayList<ArrayList<StringBuffer[]>>
+            System.out.println("NEXT []----------> " + getBinaryString(nextVidInt));
+            vbs.addAll(Arrays.asList(getBinaryString(nextVidInt).toString().split("")));
 
-                    for (int i1 = 0; i1 < getOriginalImageWidth; i1++) { // ArrayBuffer<StringBuffer[]>
+            for (int i = 0; i < originalImageHeight; i++) { // ArrayList<ArrayList<StringBuffer[]>>
+
+                for (int i1 = 0; i1 < getOriginalImageWidth; i1++) { // ArrayBuffer<StringBuffer[]>
 //
-                        if (videoIntegers.size() == 0 && vbs.isEmpty()) {
+                    if (videoIntegers.size() == 0 && vbs.isEmpty()) {
 
-                            System.out.println("Video Size :::: " + "::::: " + videoIntegers.size());
-                            System.out.println("Congratulations... all the video bytes are now inside the picture");
-                            System.out.println("Done creating stegano image");
+                        System.out.println("Video Size :::: " + "::::: " + videoIntegers.size());
+                        System.out.println("Congratulations... all the video bytes are now inside the picture");
+                        System.out.println("Done creating stegano image");
 
-                            createVideoEnpoint(i, i1);
+                        createVideoEnpoint(i, i1);
 
-                            appendRest(binaryStringBuffer, stegaImageBufferStringArray, i, i1);
+                        appendRest(binaryStringBuffer, stegaImageBufferStringArray, i, i1);
 
-                            System.exit(0);
+                        System.exit(0);
 
-                        } else if (vbs.isEmpty()) {
+                    } else if (vbs.isEmpty()) {
 
-//                            System.out.println(videoIntegers.size());
+                        int nextVidInt1 = videoIntegers.remove(0);
 
-                            int nextVidInt1 = videoIntegers.remove(0);
+                        vbs.addAll(Arrays.asList(getBinaryString(nextVidInt1).toString().split("")));
 
-                            vbs.addAll(Arrays.asList(getBinaryString(nextVidInt1).toString().split("")));
-
-                            hide(i , i1 , binaryStringBuffer , strBuf ,sba ,vbs , stegaImageBufferStringArray);
+                        hide(i , i1 , binaryStringBuffer , strBuf ,sba ,vbs , stegaImageBufferStringArray);
 
 
-                        } else {
+                    } else {
 
-//                            System.out.println(videoIntegers.size());
+                        System.out.println(i + ":::: " + "::::: " + i1);
 
-                            System.out.println(i + ":::: " + "::::: " + i1);
+                        hide(i , i1 , binaryStringBuffer , strBuf ,sba ,vbs , stegaImageBufferStringArray);
 
-                            hide(i , i1 , binaryStringBuffer , strBuf ,sba ,vbs , stegaImageBufferStringArray);
-
-                        }
                     }
-                    sba = new ArrayList<>(); // empty the row of data from the sba
                 }
-            } catch (Exception e) {
-
-                e.printStackTrace();
-
+                sba = new ArrayList<>(); // empty the row of data from the sba
             }
+        } catch (Exception e) {
 
-//        createVideoEnpoint(i, i1);
+            e.printStackTrace();
+
+        }
 
         appendRest(binaryStringBuffer, stegaImageBufferStringArray, originalImageHeight, getOriginalImageWidth);
         System.out.println(videoIntegers.size());
-
-
-
-
     }
 
 //    }
@@ -410,18 +344,8 @@ public class RSAStegano {
 
         ArrayList<Integer> arrayList = new ArrayList<>();
         int b;
-        byte[] vb = new byte[1];
-//        System.out.println("Reading the video bytes...\n please wait...");
-        int count = 0;
         while ((b = bufferedInputStream.read()) != -1) {
-//            if (arrayList.size() == 800) {
-//                break;
-//            }
-//            for (int i = 0 ; i < b ; i++) {
-//            System.out.println(getBinaryString(b));
-//            getBinaryString(b);
             arrayList.add(b);
-//            }
         }
 
         bufferedInputStream = null; //free the memory
@@ -449,7 +373,6 @@ public class RSAStegano {
     }
 
 
-
     private static void hide(int i , int i1 ,
                              HashMap<Integer , ArrayList<StringBuffer[]>> binaryStringBuffer ,
                              StringBuffer[] strBuf ,
@@ -472,28 +395,15 @@ public class RSAStegano {
      * @return
      */
     private static WritableRaster createStanoImage(LinkedHashMap<Integer, ArrayList<StringBuffer[]>> steganoImageStringBinaries) {
-//        System.out.println(stegaWriteableRaster.getHeight());
-//        System.out.println(Arrays.toString(stegaWriteableRaster.getPixel(0, 0, new int[4])));
-
         try {
-            int height = originalImageHeight;
-            int width = getOriginalImageWidth;
             int[] test = new int[4];
             System.out.println("---------------------------------------");
             for (int i = 0; i < originalImageHeight ; i++) { //height
                 for (int i1 = 0; i1 < getOriginalImageWidth ; i1++) { //width
                     //convert StringBuffer[] to the integer values
-//                    System.out.println(Arrays.toString(steganoImageStringBinaries.get(i).get(i1)));
                     StringBuffer[] sb = steganoImageStringBinaries.get(i).get(i1);
                     stegaWriteableRaster.setPixel(i1, i, getIntegerValue(sb));
                     stegaWriteableRaster.getPixel(i1, i,test);
-//                  StringBuffer[] tempArS = new StringBuffer[]{getBinaryString(test[0]), getBinaryString(test[1]), getBinaryString(test[2]) , getBinaryString(test[3]) };
-
-//                    System.out.println(Arrays.toString(test));
-//                    System.out.println("---------------------------------------");
-//                    if (i == 0 && i1 == 1600){
-//                        System.exit(0);
-//                    }
                 }
             }
 
@@ -621,8 +531,6 @@ public class RSAStegano {
     private static ArrayList<Integer> exstractVideos(BufferedImage bufferedImage) {
 
         try {
-
-//            WritableRaster wr =  bufferedImage.getRaster();
             WritableRaster wr = ImageIO.read(new File("stegano-image.jpg")).getRaster();
             int height = wr.getHeight();
             int width = wr.getWidth();
@@ -635,11 +543,8 @@ public class RSAStegano {
             int c = Integer.parseInt(spec[1]);
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width ; x += PIXEL_SIZE) {
-//                    System.out.println(y  + "::::::::::::" + x);
-//
                     if ( Integer.parseInt(spec[0]) == y && Integer.parseInt(spec[1] ) == x) {
                         writeExtractedVideo(videoExtractedIntegers);
-//                        System.out.println(y  + "::::::::::::" + x);
                         System.out.println("Done" + videoExtractedIntegers.size());
                         System.exit(0);
                     }
@@ -652,21 +557,8 @@ public class RSAStegano {
                                     + getBinaryString(stegaImagePixel[3]).toString().split("")[7]
                     );
 
-//                    System.out.println("-----------------------------------------");
-//                    System.out.println(getBinaryString(stegaImagePixel[0]).toString());
-//                    System.out.println(getBinaryString(stegaImagePixel[1]).toString());
-//                    System.out.println(getBinaryString(stegaImagePixel[2]).toString());
-//                    System.out.println(getBinaryString(stegaImagePixel[3]).toString());
-//                    System.out.println(Arrays.toString(stegaImagePixel));
-//                    System.out.println("-----------------------------------------");
-
-//                    if (y == Integer.parseInt(spec[0]) && x == Integer.parseInt(spec[1])) {
-//                        System.out.println("Video binaries are been extracted completely from the stega image...");
-//                        System.exit(0);
-//                    }
                     if (tempString.split("").length == 8) {
                         videoExtractedIntegers.add(Integer.parseInt(tempString,2));
-//                        System.out.println(tempString);
                         tempString = "";// clear the string
                     }
                 }
@@ -694,7 +586,6 @@ public class RSAStegano {
         System.err.println("WRITING THE VIDEO INSIDE A NEW FILE WITH THE EXTENSION");
         try(BufferedOutputStream bo = new BufferedOutputStream(new FileOutputStream(new File("out.dec.mp4")))) {
             while (!vidA.isEmpty()) {
-//                System.out.println(getBinaryString(vidA.get(0)));
                 bo.write((byte)vidA.remove(0).intValue());
             }
             bo.flush();
@@ -723,8 +614,6 @@ public class RSAStegano {
     private static BufferedInputStream getVideoInputStream() throws IOException {
 
         return new BufferedInputStream(new FileInputStream("src\\original-video.mp4.videnc"));
-//        return new BufferedInputStream(new FileInputStream("out.dec.mp4"));
-
     }
 
     /**
