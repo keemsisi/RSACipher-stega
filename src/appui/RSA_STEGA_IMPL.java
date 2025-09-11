@@ -29,7 +29,6 @@ public class RSA_STEGA_IMPL {
     public static String extractedVideo = "extracted-video-from-stega-image";
     public static String stegaImageFileOut = "stega-image";
     public static String stegaImageFileInput = "stega-image_mp4_704560_.PNG";
-//    public static String imageFile = "";
     public JTextArea jTextArea;
 
     public static String encryptedVideoInputFile = "C:\\Users\\user\\IdeaProjects\\RSA_Steganography\\3bb615ff-a4fa-470b-b7c0-faa502217a35.mp4.videnc";
@@ -47,7 +46,6 @@ public class RSA_STEGA_IMPL {
 
     private void processBufferedImage() throws IOException {
         this.originalBufferedImage = createBufferedImage();
-//        this.originalBufferedImage.
     }
 
     private byte[] getARGB() {
