@@ -231,20 +231,6 @@ public class RSAStegano {
 
 
         LinkedHashMap<Integer, ArrayList<StringBuffer[]>> stegaImageBufferStringArray = new LinkedHashMap<>();
-//        System.out.println("IMAGE BINARIES BEFORE START");
-//            int height = originalImageHeight;
-//            int width = getOriginalImageWidth;
-//            int[] test = new int[4];
-//            for (int k = 0; k < binaryStringBuffer.size(); k++) { // ArrayList<ArrayList<StringBuffer[]>>
-//                for (int j = 0; j < binaryStringBuffer.get(k).size(); j++) { // ArrayBuffer<StringBuffer[]>
-//                    StringBuffer[] sb = binaryStringBuffer.get(k).get(j);
-//                    System.out.println(Arrays.toString(sb));
-//                    if (k == 2) {
-//                        System.out.println("IMAGE BINARIES BEFORE END");
-////                        System.exit(0);
-//                    }
-//                }
-//            }
 
         /**
          * This method will hide all the video bytes which has been converted to
