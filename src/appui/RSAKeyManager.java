@@ -22,19 +22,13 @@ import java.util.HashMap;
  */
 public class RSAKeyManager {
 
-    private static Cipher cipherEncrypter;
-    private static Cipher cipherDecrypter;
-    private static SecretKey cipherSecreteKey;
-    private static String cipherAlgorithm;
-    private String videoPath;
-    private HashMap<Integer, Byte[]> frames;
     private static String timeString;
 
     /**
      * Constructor initializes the time string using the current system time.
      */
     public RSAKeyManager() {
-        this.timeString = Calendar.getInstance().getTime().toString();
+        timeString = Calendar.getInstance().getTime().toString();
     }
 
     /**
@@ -43,7 +37,7 @@ public class RSAKeyManager {
      * @param keyFile The file path to the private key.
      * @return The loaded PrivateKey instance.
      */
-    public static final PrivateKey loadPrivateKeyFromFile(String keyFile) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public static PrivateKey loadPrivateKeyFromFile(String keyFile) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         Path path = Paths.get(keyFile);
         byte[] bytes = Files.readAllBytes(path);
         PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(
@@ -105,7 +99,7 @@ public class RSAKeyManager {
      * @return The PublicKey.
      */
     public static PublicKey getPublicKey(KeyPair keyPair) {
-        if (!keyPair.equals(null)) {
+        if (keyPair != null) {
             return keyPair.getPublic();
         } else {
             throw new IllegalArgumentException("Key Pair is not provided");
@@ -207,7 +201,7 @@ public class RSAKeyManager {
      * @return Initialized Cipher for encryption.
      */
     public static Cipher initCipherEncrypter(String privateKeyFilePath) throws Exception {
-        cipherEncrypter = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        Cipher cipherEncrypter = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipherEncrypter.init(Cipher.ENCRYPT_MODE, loadPublicKeyFromFile(privateKeyFilePath));
         return cipherEncrypter;
     }
@@ -219,7 +213,7 @@ public class RSAKeyManager {
      * @return Initialized Cipher for decryption.
      */
     public static Cipher initCipherDecrypter(String privateKeyFileName) throws Exception {
-        cipherDecrypter = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        Cipher cipherDecrypter = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipherDecrypter.init(Cipher.DECRYPT_MODE, loadPrivateKeyFromFile(privateKeyFileName));
         return cipherDecrypter;
     }

@@ -10,7 +10,6 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 import javax.imageio.ImageIO;
-import javax.imageio.metadata.IIOMetadata;
 import javax.swing.JTextArea;
 
 /**
@@ -22,7 +21,6 @@ public class RSA_STEGA_IMPL {
     public static File imageFile;
     private BufferedImage originalBufferedImage;
     private static WritableRaster stegaWriteableRaster;
-    private BufferedImage stegaImage;
     private static final int PIXEL_SIZE = 1; // the size of each pixel
     private static int originalImageHeight = 0;
     private static int getOriginalImageWidth = 0;
@@ -34,7 +32,7 @@ public class RSA_STEGA_IMPL {
     public static String encryptedVideoInputFile = "C:\\Users\\user\\IdeaProjects\\RSA_Steganography\\3bb615ff-a4fa-470b-b7c0-faa502217a35.mp4.videnc";
 
     public RSA_STEGA_IMPL(File imageFileName, JTextArea jTextArea) {
-        this.imageFile = imageFileName;
+        imageFile = imageFileName;
         this.jTextArea = jTextArea;
     }
     private static final ExecutorService executorService = createThreadPoolsForVideoEmbedding(10);
@@ -72,9 +70,6 @@ public class RSA_STEGA_IMPL {
         return originalBufferedImage.getData().createCompatibleWritableRaster();
     }
 
-    private static boolean done = false;
-
-    //    private HashMap<Integer , ArrayList<StringBuffer[]>> getAllPixelsFromOriginalImage() throws Exception {
     public void getAllPixelsFromOriginalImage() throws Exception {
         jTextArea.append("\n>>>>Processing the video steganography...\n>>>>Please wait while the program hides the video insde the image\nThis will take a while");
         Thread processor = new Thread(() -> {
@@ -82,37 +77,22 @@ public class RSA_STEGA_IMPL {
                 processBufferedImage();
                 ArrayList<Integer> videoBinaryArray = getVideoBinaryArray(null);
 
-//        System.out.println(videoBinaryArray.size() );
-                createVideoEnpoint(videoBinaryArray.size());
+                createVideoEndpoint(videoBinaryArray.size());
 
                 if (videoBinaryArray.size() * 2 > (getImageWidth() * getImageHeight())) {
-//            System.err.println("VIDEO IS TOO LARGE TO FIT INTO THE IMAGE...");
                     jTextArea.append(">>>>\nVIDEO IS TOO LARGE TO FIT INTO THE IMAGE...");
                     jTextArea.append(">>>>\nVideo can not be hidden.... please try another image and video combination");
-//                    processor.interrupt();
                     return;
-//            System.exit(0);
                 }
 
-                double[][] pixels = new double[getImageWidth()][3];
                 int[] pixel = new int[4];
                 stegaWriteableRaster = createStegaImage();
                 Raster originalImageRaster = getImageRaster();
-                ArrayList<StringBuffer[]> pixelArrayStringBuffer = new ArrayList<>();
-                int check = 0;
                 ArrayList<String> vidc = new ArrayList<>();
 
-                StringBuffer[] tempArS = new StringBuffer[4];
-                this.originalImageHeight = getImageHeight();
-                this.getOriginalImageWidth = getImageWidth();
+                originalImageHeight = getImageHeight();
+                getOriginalImageWidth = getImageWidth();
 
-                StringBuffer R = new StringBuffer(),
-                        G = new StringBuffer(),
-                        B = new StringBuffer(),
-                        A = new StringBuffer();
-
-//        System.out.println("height ::: " + getImageHeight());
-//        System.out.println("width ::: " + getImageWidth());
                 jTextArea.append("The image Height ::: " + getImageHeight());
                 jTextArea.append("The image width ::: " + getImageWidth());
 
@@ -121,94 +101,62 @@ public class RSA_STEGA_IMPL {
                     for (int x = 0; x < getImageWidth(); x += PIXEL_SIZE) {
 
                         originalImageRaster.getPixel(x, y, pixel);
-//                System.out.println(++check);
 
-//                if (videoBinaryArray.size() == 0) {
-//                     System.out.println("ALL THE VIDEO BYTES WERE HIDDEN SUCCESSFULLY ");
-//                    System.out.println("X :: " + x + " Y  :: " + y);
-//                    System.exit(0);
-//                }
-//                if (vidc.isEmpty() && !videoBinaryArray.isEmpty()) {
-//                    System.out.println(++check);
-//                }
                         if (!videoBinaryArray.isEmpty()) {
                             //remove the byte in the video and fill in
                             if (vidc.isEmpty()) {
-//                        System.out.println(getBinaryString(videoBinaryArray.get(0)));
                                 vidc.addAll(Arrays.asList(getBinaryString(videoBinaryArray.remove(0)).toString().split("")));
                             }
                         }
 
                         if (vidc.size() == 8) {
-
-//                        System.out.println("---------------------------------------------------------------------");
-//                        System.out.println(vidc.get(0) + vidc.get(1) + vidc.get(2) + vidc.get(3) );
-//                        System.out.println("BEFORE " + Arrays.toString(pixel));
                             //pull out the first four valuez starting from the left hand side
-                            R = getBinaryString(pixel[0]); // convert integer to stringbuffer
+                            StringBuffer R = getBinaryString(pixel[0]); // convert integer to stringbuffer
                             R.setCharAt(7, vidc.remove(0).charAt(0)); // change the LSB
                             pixel[0] = Integer.parseInt(R.toString(), 2); // R // set the new value
 
-                            G = getBinaryString(pixel[1]);
+                            StringBuffer G = getBinaryString(pixel[1]);
                             G.setCharAt(7, vidc.remove(0).charAt(0));
                             pixel[1] = Integer.parseInt(G.toString(), 2); // G
 
-                            B = getBinaryString(pixel[2]);
+                            StringBuffer B = getBinaryString(pixel[2]);
                             B.setCharAt(7, vidc.remove(0).charAt(0));
                             pixel[2] = Integer.parseInt(B.toString(), 2); // B
 
-                            A = getBinaryString(pixel[3]);
+                            StringBuffer A = getBinaryString(pixel[3]);
                             A.setCharAt(7, vidc.remove(0).charAt(0));
                             pixel[3] = Integer.parseInt(A.toString(), 2); // A
 
-//                        System.out.println("AFTER " + Arrays.toString(pixel));
-//                        System.out.println("-----------------------------------------------------
                             stegaWriteableRaster.setPixel(x, y, pixel);
-//                        System.out.println(++check);
-//                    System.out.println(x + "::::"+ y);
 
-//                    System.out.println("Done");
                         } else if (vidc.size() == 4) {
 
-//                        System.out.println("---------------------------------------------------------------------");
-//                        System.out.println(vidc.get(0)  + vidc.get(1) + vidc.get(2) + vidc.get(3) );
-//                        System.out.println("BEFORE " + Arrays.toString(pixel));
-                            R = getBinaryString(pixel[0]); // convert integer to stringbuffer
+                            StringBuffer R = getBinaryString(pixel[0]); // convert integer to stringbuffer
                             R.setCharAt(7, vidc.remove(0).charAt(0)); // change the LSB
                             pixel[0] = Integer.parseInt(R.toString(), 2); // R // set the new value
 
-                            G = getBinaryString(pixel[1]);
+                            StringBuffer G = getBinaryString(pixel[1]);
                             G.setCharAt(7, vidc.remove(0).charAt(0));
                             pixel[1] = Integer.parseInt(G.toString(), 2); // G
 
-                            B = getBinaryString(pixel[2]);
+                            StringBuffer B = getBinaryString(pixel[2]);
                             B.setCharAt(7, vidc.remove(0).charAt(0));
                             pixel[2] = Integer.parseInt(B.toString(), 2); // B
 
-                            A = getBinaryString(pixel[3]);
+                            StringBuffer A = getBinaryString(pixel[3]);
                             A.setCharAt(7, vidc.remove(0).charAt(0));
                             pixel[3] = Integer.parseInt(A.toString(), 2); // A
-//
-//                        System.out.println("AFTER " + Arrays.toString(pixel));
-//                        System.out.println("---------------------------------------------------------------------");
 
                             stegaWriteableRaster.setPixel(x, y, pixel);
-//                        System.out.println("Done!");
-//                        System.out.println(++check);
-//                        System.out.println(x + "::::"+ y);
                         } else {
                             stegaWriteableRaster.setPixel(x, y, pixel); // set the default if the video bytes are all exhausted
-//                            System.out.println("Ok");
                         }
                     }
                 }
 
-//        videoBinaryArray.forEach(integer -> {
-//            System.out.println(integer);
-//        });
                 BufferedImage bufferedImage = new BufferedImage(stegaWriteableRaster.getWidth(), stegaWriteableRaster.getHeight(), BufferedImage.TYPE_INT_ARGB);
                 bufferedImage.setData(stegaWriteableRaster);
-                String extension = getFileExtentsion(getImageFile());
+                String extension = getFileExtension(getImageFile());
                 stegaImageFileOut = stegaImageFileOut + "." + extension;
                 jTextArea.append("\nComplete hidden the video ::::::: " + encryptedVideoInputFile);
                 ImageIO.write(bufferedImage, extension, new File(stegaImageFileOut));
@@ -296,13 +244,11 @@ public class RSA_STEGA_IMPL {
                 if (!stopper) {
                     for (int i1 = x; i1 < buf.get(0).size(); i1++) { // ArrayBuffer<StringBuffer[]>
                         linked.put(i, buf.get(i));
-//                System.out.println(" VBS END :: " + Arrays.asList(buf.get(i).toArray()));
                     }
                     stopper = true;
                 } else {
                     for (int i1 = 0; i1 < buf.get(0).size(); i1++) { // ArrayBuffer<StringBuffer[]>
                         linked.put(i, buf.get(i));
-//                System.out.println(" VBS END :: " + Arrays.asList(buf.get(i).toArray()));
                     }
                 }
             }
@@ -310,13 +256,6 @@ public class RSA_STEGA_IMPL {
             System.out.println("HEIGHT SIZE :::: " + linked.size());
             System.out.println("WIDTH SIZE :::: " + linked.get(0).size());
 
-//        for (int i = 0; i < y; i++) { //height
-//            for (int i1 = 0; i1 < x ; i1++) { //width
-//                StringBuffer[] sb = linked.get(i).get(i1);
-//                stegaWriteableRaster.setPixel(i1, i, getIntegerValue(sb));
-//                System.out.println(Arrays.toString(sb));
-//            }
-//        }
             createStanoImage(linked);
             stopAllThreadExecutorservices(executorService);
             System.out.println(buf.size() + "-------------->>>>>>>   " + linked.size());
@@ -337,20 +276,6 @@ public class RSA_STEGA_IMPL {
     private static void changeLSBs(HashMap<Integer, ArrayList<StringBuffer[]>> binaryStringBuffer, ArrayList<Integer> videoIntegers) {
 
         LinkedHashMap<Integer, ArrayList<StringBuffer[]>> stegaImageBufferStringArray = new LinkedHashMap<>();
-//        System.out.println("IMAGE BINARIES BEFORE START");
-//            int height = originalImageHeight;
-//            int width = getOriginalImageWidth;
-//            int[] test = new int[4];
-//            for (int k = 0; k < binaryStringBuffer.size(); k++) { // ArrayList<ArrayList<StringBuffer[]>>
-//                for (int j = 0; j < binaryStringBuffer.get(k).size(); j++) { // ArrayBuffer<StringBuffer[]>
-//                    StringBuffer[] sb = binaryStringBuffer.get(k).get(j);
-//                    System.out.println(Arrays.toString(sb));
-//                    if (k == 2) {
-//                        System.out.println("IMAGE BINARIES BEFORE END");
-////                        System.exit(0);
-//                    }
-//                }
-//            }
 
         /**
          * This method will hide all the video bytes which has been converted to
@@ -369,7 +294,6 @@ public class RSA_STEGA_IMPL {
             System.out.println("VIDEO SIZE ::: " + videoIntegers.size() + "IMAGE PIXELS :::: " + (binaryStringBuffer.size() * binaryStringBuffer.get(0).size() * 4));
             System.err.println("ERROR_OCCURRED :::: The video is too large to be hidden with the given picture");
         }
-        int vidPos = 0;
         ArrayList<String> vbs = new ArrayList<>();
         // ArrayList <ArrayList<StringBuffer[]>>
         //creating the thread pool for video embedding
@@ -381,7 +305,6 @@ public class RSA_STEGA_IMPL {
                 vbs.addAll(Arrays.asList(getBinaryString(nextVidInt).toString().split("")));
                 for (int i = 0; i < binaryStringBuffer.size(); i++) { // ArrayList<ArrayList<StringBuffer[]>>
                     for (int i1 = 0; i1 < binaryStringBuffer.get(i).size(); i1++) { // ArrayBuffer<StringBuffer[]>
-//                        System.out.println( videoIntegers.size());
 
                         if (videoIntegers.size() == 0 && vbs.isEmpty()) {
 
@@ -389,43 +312,21 @@ public class RSA_STEGA_IMPL {
                             System.out.println("Congratulations... all the video bytes are now inside the picture");
                             System.out.println("Done creating stegano image");
 
-//                            System.out.println(i + ":::: " + "::::: " + i1);
-//                            createVideoEnpoint(i, i1);
                             appendRest(binaryStringBuffer, stegaImageBufferStringArray, i, i1);
 
                             System.exit(0);
 
                         } else if (vbs.isEmpty()) {
-//                            System.out.println(i + "---------- " + i1);
-//                        System.out.println("waiting");
-                            int nextVidInt1 = videoIntegers.remove(0);
-//                        System.out.println("NEXT ----------> " + getBinaryString(nextVidInt1));
-                            vbs.addAll(Arrays.asList(getBinaryString(nextVidInt1).toString().split("")));
-//                            System.out.println(vbs.get(0) + "" + vbs.get(1) +""+vbs.get(2)+""+vbs.get(3));
 
-//                        System.out.println("NEW VBS:: " + Arrays.toString(vbs.toArray()));
-//                            strBuf = binaryStringBuffer.get(i).get(i1);
-//                            strBuf[0].setCharAt(7, vbs.remove(0).charAt(0));
-//                            strBuf[1].setCharAt(7, vbs.remove(0).charAt(0));
-//                            strBuf[2].setCharAt(7, vbs.remove(0).charAt(0));
-//                            strBuf[3].setCharAt(7, vbs.remove(0).charAt(0));
-//                            sba.add(new StringBuffer[]{strBuf[0], strBuf[1], strBuf[2], strBuf[3]});
-//                            stegaImageBufferStringArray.put(i, sba);
+                            int nextVidInt1 = videoIntegers.remove(0);
+
+                            vbs.addAll(Arrays.asList(getBinaryString(nextVidInt1).toString().split("")));
                             hide(i, i1, binaryStringBuffer, strBuf, sba, vbs, stegaImageBufferStringArray);
 
                         } else {
                             System.out.println(i + ":::: " + "::::: " + i1);
-//                            System.out.println(vbs.get(0) + "" + vbs.get(1) +""+vbs.get(2)+""+vbs.get(3));
 
                             hide(i, i1, binaryStringBuffer, strBuf, sba, vbs, stegaImageBufferStringArray);
-
-                            //System.out.println(" VBS END :: " + Arrays.toString(strBuf));
-//                        System.out.println("VBS END:: " + Arrays.toString(vbs.toArray()));
-//                        System.out.println("---------- AFTER ------------"  +   strBuf[0].toString() );
-//                        System.out.println("---------- AFTER ------------"  +   strBuf[1].toString() );
-//                        System.out.println("---------- AFTER ------------"  +   strBuf[2].toString() );
-//                        System.out.println("---------- AFTER ------------"  +   strBuf[3].toString() );
-//                        System.out.println("------------------------------------------------------------------------------\n\n\n\n");
                         }
                     }
                     sba = new ArrayList<>(); // empty the row of data from the sba
@@ -488,17 +389,8 @@ public class RSA_STEGA_IMPL {
         ArrayList<Integer> arrayList = new ArrayList<>();
         int b;
         byte[] vb = new byte[1];
-//        System.out.println("Reading the video bytes...\n please wait...");
-        int count = 0;
         while ((b = bufferedInputStream.read()) != -1) {
-//            if (arrayList.size() == 1000000) {
-//                break;
-//            }
-//            for (int i = 0 ; i < b ; i++) {
-//            System.out.println(getBinaryString(b));
-//            getBinaryString(b);
             arrayList.add(b);
-//            }
         }
 
         bufferedInputStream = null; //free the memory
@@ -559,7 +451,7 @@ public class RSA_STEGA_IMPL {
 
             BufferedImage bufferedImage = new BufferedImage(stegaWriteableRaster.getWidth(), stegaWriteableRaster.getHeight(), BufferedImage.TYPE_INT_ARGB);
             bufferedImage.setData(stegaWriteableRaster);
-            String extension = getFileExtentsion(getImageFile());
+            String extension = getFileExtension(getImageFile());
             ImageIO.write(bufferedImage, extension, new File("stegano-image" + extension));
 
             return stegaWriteableRaster;
@@ -639,7 +531,6 @@ public class RSA_STEGA_IMPL {
         Thread proce2 = new Thread(new Runnable() {
             @Override
             public void run() {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 try {
 
                     WritableRaster wr = ImageIO.read(new File(stegaImageFileInput)).getRaster();
@@ -651,7 +542,6 @@ public class RSA_STEGA_IMPL {
                     System.out.println(height + ":::: " + width);
 
                     int[] stegaImagePixel = new int[4];
-//            String[] spec = new BufferedReader(new FileReader("spec.code")).readLine().split(", ");
                     String spec = stegaImageFileInput.split("_")[2];
 
                     Integer videobyteLength = Integer.parseInt(spec);
@@ -675,29 +565,22 @@ public class RSA_STEGA_IMPL {
                             s.append(G.charAt(7));
                             s.append(B.charAt(7));
                             s.append(A.charAt(7));
-//                    System.out.println(++count);
 
                             if (s.length() == 8) {
                                 videoExtractedIntegers.add(Integer.parseInt(s.toString(), 2));
-//                        System.out.println(s);
                                 s = new StringBuffer();
-                                int remainder = (videobyteLength - count);
-//                                j.append("\n>>> Remianing ::: " +  count );
                                 System.out.println(++count);
                             }
 
                             if (videoExtractedIntegers.size() == videobyteLength) {
-//                        if ( videoExtractedIntegers.size() == Integer.parseInt(spec[0])) {
                                 j.append("\nExtraction completed...\n");
                                 writeExtractedVideo(videoExtractedIntegers, j);
                                 System.out.println("Done" + videoExtractedIntegers.size());
                                 j.append(("Done Extracting the video"));
-//                        System.exit(0);
                             }
 
                         }
                     }
-//                return videoExtractedIntegers;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -715,7 +598,7 @@ public class RSA_STEGA_IMPL {
      * @param fileName
      * @return
      */
-    private static String getFileExtentsion(String fileName) {
+    private static String getFileExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
@@ -725,14 +608,9 @@ public class RSA_STEGA_IMPL {
 
         try (BufferedOutputStream bo = new BufferedOutputStream(new FileOutputStream(new File(extractedVideo + "." + stegaImageFileInput.split("_")[1])))) {
             while (!vidA.isEmpty()) {
-//                System.out.println(getBinaryString(vidA.get(0)));
                 bo.write(vidA.remove(0).byteValue());
             }
             bo.flush();
-            /*decode the encrypted video from the extracted video and write to a file*/
-//            RSAStegaCrypt.doDecryptRSAWithAES(new File(extractedVideo + stegaImageFileOut.split("_")[1]),stegaImageFileInput.split("_")[1]);
-//            System.out.println("Successful!");
-//            System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -752,11 +630,9 @@ public class RSA_STEGA_IMPL {
      * @return
      */
     private static BufferedInputStream getVideoInputStream() throws IOException {
-//        System.out.println(Arrays.toString(encryptedVideoInputFile.split("\\.")));
         stegaImageFileOut = "stega-image_" + encryptedVideoInputFile.split("\\.")[1];
         System.out.println(stegaImageFileOut);
         return new BufferedInputStream(new FileInputStream(encryptedVideoInputFile));
-//        return new BufferedInputStream(new FileInputStream("out.dec.mp4"));
 
     }
 
@@ -765,10 +641,8 @@ public class RSA_STEGA_IMPL {
      * // * @param y // * @param x
      *
      */
-    private static void createVideoEnpoint(long s) {
-
+    private static void createVideoEndpoint(long s) {
         stegaImageFileOut = stegaImageFileOut + "_" + s + "_";
-//        System.out.println(stegaImageFileOut);
     }
 
 }

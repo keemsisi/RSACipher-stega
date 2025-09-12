@@ -103,14 +103,7 @@ public class RSAStegaCrypt extends RecursiveTask<byte[]> {
      * @throws Exception If any exception occurs during encryption
      */
     static public void doEncryptRSAWithAES(File inputFile)
-            throws java.security.NoSuchAlgorithmException,
-            java.security.InvalidAlgorithmParameterException,
-            java.security.InvalidKeyException,
-            java.security.spec.InvalidKeySpecException,
-            NoSuchPaddingException,
-            BadPaddingException,
-            IllegalBlockSizeException,
-            IOException {
+            throws java.security.NoSuchAlgorithmException {
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
         kgen.init(128);
         SecretKey skey = kgen.generateKey();
@@ -290,11 +283,9 @@ public class RSAStegaCrypt extends RecursiveTask<byte[]> {
                 }
 
                 byte[] totalDecryptedBytes = new byte[decryptedByteFirst.length + decryptedByteSecond.length];
-                decryptedByteFirst = decryptedByteFirst;
                 System.arraycopy(decryptedByteFirst, 0, totalDecryptedBytes, 0, decryptedByteFirst.length);
 
                 int j = decryptedByteFirst.length - 1;
-                decryptedByteSecond = decryptedByteSecond;
                 System.arraycopy(decryptedByteSecond, 0, totalDecryptedBytes, j + 0, decryptedByteSecond.length);
                 System.out.println("COMPLETED TOTAL DECRYPTED BYTES : " + totalDecryptedBytes.length);
                 return totalDecryptedBytes;
@@ -331,10 +322,9 @@ public class RSAStegaCrypt extends RecursiveTask<byte[]> {
         return new Callable<Byte[]>() {
             @Override
             public Byte[] call() throws Exception {
-                ArrayList<Byte> arrayList = new ArrayList<Byte>();
                 try {
                     byte[] bytesRead = new byte[2048]; // maximum number of bytes to read
-                    byte[] finalBytes = new byte[arrayList.size()];
+                    byte[] finalBytes = new byte[0];
                     if (videoToEncrypInStream.read(bytesRead) != -1) {
                         videoToEncrypOutStream.write(encryptVideoBytes(finalBytes));
                         videoToEncrypOutStream.flush();//encrypt the bytes and write to output
@@ -352,57 +342,3 @@ public class RSAStegaCrypt extends RecursiveTask<byte[]> {
         };
     }
 }
-
-//    public static void main(String[] args) throws Exception {
-//
-//
-//
-//
-////
-////        Long start = System.currentTimeMillis();
-////        doEncryptRSAWithAES(
-////                new File(videoToEncrypt)
-////        );
-////        Long end = System.currentTimeMillis();
-////        System.out.println( "End :: " +  ( end -  start )  ) ;
-//
-//
-//     Long start = System.currentTimeMillis();
-//        doDecryptRSAWithAES(
-//                new File("C:\\Users\\user\\IdeaProjects\\RSA_Steganography\\62a41b1f-f00d-4987-abc3-33982f9e3d93.mp4.videnc" ), "extracted");
-//////
-//        Long end = System.currentTimeMillis();
-//        System.out.println( "End :: " +  ( end -  start )  ) ;
-//
-//
-////
-////
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-////        File filer = new File(videoToEncrypt);
-////        RSAStegaCrypt crypter = new RSAStegaCrypt(filer , new File("new-encryptedvid.enc"));
-////        crypter.concurrentEncrypt();
-//
-//
-////        BufferedInputStream bufferedInputStream =  new BufferedInputStream(
-////                new FileInputStream("C:\\Users\\NeuralTechX CEO\\Documents\\RSAWithSteganography\\new-encryptedvid.enc")
-////        );
-//
-////        byte[] tets = new byte[200] ;
-////        while (bufferedInputStream.read(tets) != -1) {
-////            System.out.println(Arrays.toString(tets));
-////        }
-//    }
