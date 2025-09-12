@@ -153,7 +153,7 @@ public class ui extends javax.swing.JFrame {
 
         mothertab.addTab("ENCRYPT VIDEO", encryptiontab);
 
-        keygenbutton.setBackground(new java.awt.Color(51, 0, 204));
+        keygenbutton.setBackground(new java.awt.Color(0, 128, 0));
         keygenbutton.setForeground(new java.awt.Color(255, 255, 255));
         keygenbutton.setText("GENERATE KEY PAIR");
         keygenbutton.addActionListener(new java.awt.event.ActionListener() {
