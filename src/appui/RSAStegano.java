@@ -130,24 +130,6 @@ public class RSAStegano {
         }
         return stringBuffer;
     }
-//
-//    public static void main(String[] args) {
-//
-//        try {
-//            RSAStegano imageProcessor = new RSAStegano(new File(getImageFile()));
-////
-//////        arrayList.forEach(System.out::println);
-////        System.out.println("Starting to perform LSB manipulation");
-//        imageProcessor.getAllPixelsFromOriginalImage();
-////            System.out.println("Running");
-////            exstractVideos(null);
-////        getVideoBinaryArray(null);
-////            copySomeBytes(null);
-//        }catch (Exception e) {
-//            e.printStackTrace();
-//        }
-////
-//    }
 
     private static ArrayList<Integer[]> getpixelIntergerArr(ArrayList<StringBuffer[]> stringbuffferArray) {
         ArrayList<Integer[]> result = new ArrayList<Integer[]>();
